@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="description"
+    content="ABHISHEK TIWARI - blue Team Lead, Penetration Tester & Defensive Security Researcher Portfolio." />
+  <meta name="theme-color" content="#131313" />
+  <title>ABHISHEK TIWARI | Defensive Security Researcher & Blue Team</title>
+
+  <!-- Typography & Icons -->
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23131313' stroke='%2300ff41' stroke-width='2'/%3E%3Cpath d='M8 11l6 5-6 5M16 21h8' stroke='%2300ff41' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,400..700,0..1,0&display=swap"
+    rel="stylesheet" />
+
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- Fullscreen Matrix Rain Animation Canvas (Interactive easter-egg) -->
+  <canvas id="matrix-canvas"></canvas>
+
+  <!-- CRT Scanline & Ambient Vignette Layers -->
+  <div class="scanlines-overlay" id="scanlines-layer"></div>
+  <div class="vignette-overlay"></div>
+
+  <!-- Main Cyber Shell Wrapper -->
+  <div class="cyber-shell">
+
+    <!-- Top Sticky Terminal Header -->
+    <header class="cyber-header">
+      <div class="header-top-row">
+        <!-- Terminal dots -->
+        <div class="terminal-dots">
+          <span class="dot dot-red" id="dot-red" title="Purge CLI Screen"></span>
+          <span class="dot dot-yellow" id="dot-yellow" title="Reload System Diagnostics"></span>
+          <span class="dot dot-green" id="dot-green" title="Toggle Matrix Rain"></span>
+          <span
+            style="font-size: 10px; font-weight: 700; color: var(--primary); margin-left: 4px; letter-spacing: 0.05em;">root@cybersec:~$</span>
+        </div>
+
+        <!-- Controls: Audio, CRT toggle, Matrix toggle, Status, Avatar -->
+        <div class="header-controls">
+          <button class="icon-btn" id="audio-toggle-btn" title="Toggle Cyber Audio FX">
+            <span class="material-symbols-outlined" id="audio-icon">volume_up</span>
+          </button>
+          <button class="icon-btn" id="crt-toggle-btn" title="Toggle CRT Scanline Shader">
+            <span class="material-symbols-outlined">tv</span>
+          </button>
+          <button class="icon-btn" id="matrix-toggle-btn" title="Toggle Matrix Stream">
+            <span class="material-symbols-outlined">terminal</span>
+          </button>
+
+          <div class="status-indicator" id="status-indicator-box" title="System Online Chronometer • Started at 00-00-00-00 • Click to switch format">
+            <span class="status-dot animate-pulse"></span>
+            <span id="uptime-clock">[SYS:ONLINE 00d 00h 00m 00s]</span>
+          </div>
+
+          <img src="assets/images/avatar.jpg" alt="ABHISHEK TIWARI Profile Avatar" class="header-avatar"
+            id="header-avatar-btn" />
+        </div>
+      </div>
+
+      <!-- Path breadcrumb title -->
+      <div class="header-path-row">
+        <div class="header-title-box">
+          <span class="hash">#</span>
+          <span class="title" id="current-view-title">TERMINAL HOME</span>
+        </div>
+        <span class="header-tty" id="tty-indicator">[tty1: active]</span>
+      </div>
+
+      <!-- Top horizontal navigational pills -->
+      <div class="header-nav-scroll no-scrollbar">
+        <a class="nav-pill active" data-tab="home" href="#home">~/home</a>
+        <a class="nav-pill" data-tab="about" href="#about">~/about</a>
+        <a class="nav-pill" data-tab="skills" href="#skills">~/skills</a>
+        <a class="nav-pill" data-tab="projects" href="#projects">~/projects</a>
+        <a class="nav-pill" data-tab="contact" href="#contact">~/contact</a>
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="cyber-main">
+
+      <!-- ====================================================================
+           1. TAB: ~/home (Terminal Home)
+           ==================================================================== -->
+      <section class="tab-view active-view" id="view-home">
+
+        <!-- Boot Sequence Banner & Diagnostic Terminal -->
+        <div class="cyber-card-dark">
+          <div class="boot-header">
+            <div class="terminal-dots">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+              <span style="font-size: 10px; color: var(--text-muted); margin-left: 4px;">sys_init.daemon</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button id="btn-rerun-diagnostics" class="icon-btn" style="width: 20px; height: 20px; font-size: 13px;"
+                title="Re-run Diagnostics">
+                <span class="material-symbols-outlined" style="font-size: 13px;">sync</span>
+              </button>
+              <span class="badge-tag badge-green pulse-badge" id="boot-status-pill">[SEC_CHCK: PASS]</span>
+            </div>
+          </div>
+          <div class="boot-log" id="boot-log-container">
+            <div style="color: var(--cyan); font-weight: 700;">[ SYSTEM INITIALIZING v4.2.0-sec ]</div>
+            <div class="boot-row">
+              <span class="boot-ok">[ OK ]</span>
+              <span>Loading Security Modules (kernel-sec-6.8-hardened)...</span>
+            </div>
+            <div class="boot-row">
+              <span class="boot-ok">[ OK ]</span>
+              <span>Establishing Encrypted Tunnel [WireGuard/ChaCha20-Poly1305]...</span>
+            </div>
+            <div class="boot-row">
+              <span class="boot-ok">[ OK ]</span>
+              <span>Mounting Red Team Weaponization Framework (BloodHound / eBPF)...</span>
+            </div>
+            <div class="boot-row"
+              style="color: var(--primary); font-weight: 700; margin-top: 4px; justify-content: space-between;">
+              <div style="display: flex; align-items: center; gap: 4px;">
+                <span class="material-symbols-outlined" style="font-size: 15px;">verified</span>
+                <span>[ OK ] ACCESS GRANTED. ROOT PRIVILEGES UNLOCKED.</span>
+              </div>
+              <span style="color: var(--cyan); font-size: 10px;">0.042ms</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual Hacker Telemetry & Identity Card -->
+        <div class="cyber-card">
+          <!-- Banner preview -->
+          <div class="operator-banner-box">
+            <img src="assets/images/hero-banner.jpg" alt="Cyber Warfare Operations Room" class="operator-banner-img" />
+            <div class="operator-banner-gradient"></div>
+            <div class="operator-banner-top">
+              <span class="badge-tag badge-green">IP: 10.13.37.254</span>
+              <span class="badge-tag badge-cyan">NODE: ALPHA-7</span>
+            </div>
+            <div class="operator-banner-bottom">
+              <div>
+                <div style="font-size: 10px; color: var(--cyan); font-weight: 700; letter-spacing: 0.05em;">
+                  0xOPERATOR_ID</div>
+                <h1 class="operator-title">ABHISHEK TIWARI</h1>
+              </div>
+              <span class="role-pill pulse-badge">DEFENSIVE SEC</span>
+            </div>
+          </div>
+
+          <!-- Hero Terminal Specs Window -->
+          <div style="padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
+            <div class="terminal-inner">
+              <div class="prompt-row">
+                <span class="prompt-user">root@cybersec:~#</span>
+                <span class="prompt-cmd">whoami</span>
+              </div>
+              <div class="prompt-output">
+                <div style="color: #fff; font-weight: 700;">&gt; ABHISHEK TIWARI</div>
+                <div>&gt; Cybersecurity Aspirant | Beginner Security Learner </div>
+                <div style="color: var(--cyan);">&gt; Ethical Hacking • Network Security • Threat Detection
+                </div>
+              </div>
+
+              <div class="prompt-row" style="margin-top: 0.25rem;">
+                <span class="prompt-user">root@cybersec:~#</span>
+                <span class="prompt-cmd">cat introduction.txt</span>
+              </div>
+              <div class="quote-box">
+                "Welcome to my digital workspace. I'm learning how vulnerabilities work, exploring security tools in safe labs, and building the skills to help protect digital systems."
+              </div>
+            </div>
+
+            <!-- Primary Action Buttons -->
+            <div class="action-btn-grid">
+              <button class="cyber-btn cyber-btn-primary" id="btn-explore-payloads">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <span class="material-symbols-outlined" style="font-size: 18px;">bug_report</span>
+                  <span>[ EXPLORE PAYLOADS / PROJECTS ]</span>
+                </div>
+                <span class="cursor-blink" style="width: 8px; height: 16px; background-color: var(--primary);"></span>
+              </button>
+
+              <button class="cyber-btn cyber-btn-cyan" id="btn-cat-resume">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <span class="material-symbols-outlined" style="font-size: 18px;">terminal</span>
+                  <span>[ CAT RESUME.PDF / VIEW ]</span>
+                </div>
+                <span class="material-symbols-outlined" style="font-size: 16px;">download</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick System Metrics Bar / Telemetry Gauges -->
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+          <div class="telemetry-header">
+            <span style="color: var(--text-muted); display: flex; align-items: center; gap: 4px; font-weight: 700;">
+              <span class="material-symbols-outlined" style="font-size: 14px; color: var(--cyan);">monitoring</span>
+              TELEMETRY GAUGES
+            </span>
+            <span style="color: var(--primary); font-weight: 700;">[SYNCED: 100%]</span>
+          </div>
+
+          <div class="telemetry-grid">
+            <!-- Metric 1 -->
+            <div class="gauge-card">
+              <div class="gauge-top">
+                <span>CYBERSECURITY SKILLS</span>
+                <span class="material-symbols-outlined"
+                  style="font-size: 16px; color: var(--primary);">FOUNDATION LEVEL</span>
+              </div>
+              <div class="gauge-val" style="color: var(--primary);">
+                <span></span>
+                <span style="font-size: 10px; color: var(--text-muted);">Building core security knowledge </span>
+              </div>
+              <div class="gauge-progress">
+                <div class="gauge-bar-green" style="width: 85%;"></div>
+              </div>
+            </div>
+
+            <!-- Metric 2 -->
+            <div class="gauge-card">
+              <div class="gauge-top">
+                <span>TOOLS EXPLORED</span>
+                <span class="material-symbols-outlined" style="font-size: 16px; color: var(--cyan);">HANDS-ON PRACTICE</span>
+              </div>
+              <div class="gauge-val" style="color: var(--cyan);">
+                <span></span>
+                <span style="font-size: 10px; color: var(--text-muted);">Learning security tools in virtual labs</span>
+              </div>
+              <div class="gauge-progress">
+                <div class="gauge-bar-cyan" style="width: 100%;"></div>
+              </div>
+            </div>
+
+            <!-- Metric 3 -->
+            <div class="gauge-card">
+              <div class="gauge-top">
+                <span>LEARNING RANK</span>
+                <span class="material-symbols-outlined"
+                  style="font-size: 16px; color: var(--primary);">CYBER-SECURITY</span>
+              </div>
+              <div>
+                <div style="font-size: 16px; font-weight: 700; color: #fff; margin-top: 4px;">BEGINNER</div>
+                <div style="font-size: 10px; color: var(--primary); font-weight: 600;">Learning & Growing</div>
+              </div>
+              <div class="gauge-progress">
+                <div class="gauge-bar-green" style="width: 92%;"></div>
+              </div>
+            </div>
+
+            <!-- Metric 4 -->
+            <div class="gauge-card">
+              <div class="gauge-top">
+                <span>SECURITY STATUS</span>
+                <span class="material-symbols-outlined" style="font-size: 16px; color: var(--cyan);">STATUS</span>
+              </div>
+              <div>
+                <div style="font-size: 16px; font-weight: 700; color: #fff; margin-top: 4px;">PUBLIC PROFILE</div>
+                <div style="font-size: 10px; color: var(--cyan); font-weight: 600;">READY TO LEARN / OPEN TO GROWTH</div>
+              </div>
+              <div class="gauge-progress">
+                <div class="gauge-bar-cyan" style="width: 100%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Terminal CLI Sandbox Widget -->
+        <div class="cli-box" id="cli-box">
+          <div class="cli-header">
+            <div class="terminal-dots">
+              <span class="dot dot-red" id="cli-dot-red" title="Purge CLI Screen (Ctrl+L)"></span>
+              <span class="dot dot-yellow" id="cli-dot-yellow" title="Re-sync IP & Time Telemetry"></span>
+              <span class="dot dot-green" id="cli-dot-green" title="Toggle Fullscreen / Maximize Sandbox"></span>
+              <span style="font-size: 10px; color: var(--text-muted); margin-left: 4px;">tty2: live-sandbox</span>
+            </div>
+            <div class="cli-live-status-wrap" id="cli-live-status-wrap" title="Live System Chronometer & Node Location">
+              <span class="cli-pulse-dot"></span>
+              <span class="cli-live-text" id="cli-live-text">SYNCING NODE...</span>
+            </div>
+          </div>
+
+          <!-- Command trigger pills -->
+          <div class="cli-pills no-scrollbar">
+            <span style="font-size: 10px; color: var(--text-muted); margin-right: 2px;">exec:</span>
+            <button class="cli-pill" data-cmd="help">help</button>
+            <button class="cli-pill" data-cmd="date">date</button>
+            <button class="cli-pill" data-cmd="clock">clock</button>
+            <button class="cli-pill" data-cmd="locate">locate</button>
+            <button class="cli-pill" data-cmd="whoami">whoami</button>
+            <button class="cli-pill" data-cmd="about">about</button>
+            <button class="cli-pill" data-cmd="skills">skills</button>
+            <button class="cli-pill" data-cmd="projects">projects</button>
+            <button class="cli-pill" data-cmd="writeups">writeups</button>
+            <button class="cli-pill" data-cmd="contact">contact</button>
+            <button class="cli-pill" data-cmd="matrix">matrix</button>
+            <button class="cli-pill danger" data-cmd="clear">clear</button>
+          </div>
+
+          <!-- Screen Output Area -->
+          <div class="cli-screen" id="cli-screen">
+            <div style="color: var(--text-muted);">Type a command or tap triggers above to interrogate Abhishek Tiwari's Defensive security node.</div>
+            <div style="color: var(--primary);">&gt; Available payloads: help, whoami, about, date, clock, locate, skills, projects, writeups, contact, matrix, clear</div>
+            <div style="color: var(--cyan); font-size: 10px;">[SYS: Live system clock &amp; IP geolocation chronometer active. Try 'date' or 'clock']</div>
+          </div>
+
+          <!-- Interactive Input Form -->
+          <div class="cli-input-row">
+            <span class="cli-prompt-label" style="color: var(--cyan); font-weight: 700; white-space: nowrap; font-size: 11px;">visitor@cybersec:~$</span>
+            <form class="cli-input-form" id="cli-form">
+              <input type="text" id="cli-input" class="cli-input"
+                placeholder="type command... (try 'date', 'clock', 'help' or 'matrix')" autocomplete="off" spellcheck="false" />
+              <button type="submit" class="cli-submit-btn" title="Execute Payload">
+                <span class="material-symbols-outlined" style="font-size: 17px;">subdirectory_arrow_left</span>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Featured Project Preview Cards -->
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 2px;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span class="material-symbols-outlined"
+                style="font-size: 18px; color: var(--primary);">deployed_code</span>
+              <span
+                style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #fff;">FEATURED
+                REPOSITORIES &amp; EXPLOITS</span>
+            </div>
+            <span style="font-size: 10px; color: var(--cyan); font-weight: 700;">[COUNT: 03]</span>
+          </div>
+
+         
+
+          <!-- Jump to all projects button -->
+          <button class="cyber-btn" id="btn-view-all-projects" style="justify-content: center; margin-top: 0.25rem;">
+            <span style="color: var(--primary);">[ VIEW PAYLOADS &amp; REPOSITORIES → ]</span>
+          </button>
+        </div>
+
+        <!-- Terminal Footer Snippet -->
+        <footer class="cyber-card-dark"
+          style="text-align: center; display: flex; flex-direction: column; gap: 6px; margin-bottom: 0.5rem;">
+          <div
+            style="display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--primary); font-size: 11px; font-weight: 700;">
+            <span class="status-dot animate-pulse"></span>
+            <span>🟢 LEARNING IN PUBLIC // CYBERSECURITY JOURNEY 2026</span>
+          </div>
+          <div style="font-size: 10px; color: var(--text-muted); font-family: var(--font-mono);">
+           FOCUS: ETHICAL HACKING • NETWORK SECURITY • DEFENSIVE SECURITY
+          </div>
+        </footer>
+
+      </section>
+
+      <!-- ====================================================================
+           2. TAB: ~/about (Operator Dossier / Specs)
+           ==================================================================== -->
+      <section class="tab-view" id="view-about">
+
+        <!-- Dossier Header -->
+        <div class="cyber-card-dark">
+          <div class="boot-header">
+            <div class="terminal-dots">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+              <span style="font-size: 10px; color: var(--text-muted); margin-left: 4px;">cat
+                /etc/operator/dossier.conf</span>
+            </div>
+            <span class="badge-tag badge-cyan">[CLASS: TOP_SECRET]</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 12px;">
+            <div
+              style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border-subtle); padding-bottom: 4px;">
+              <span style="color: var(--text-muted);">CODENAME:</span>
+              <span style="color: var(--primary); font-weight: 700;">ABHISHEK TIWARI</span>
+            </div>
+            <div
+              style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border-subtle); padding-bottom: 4px;">
+              <span style="color: var(--text-muted);">SPECIALIZATION:</span>
+              <span style="color: #fff; font-weight: 600;">Cybersecurity Aspirant | Blue Team Learner </span>
+            </div>
+            <div
+              style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border-subtle); padding-bottom: 4px;">
+              <span style="color: var(--text-muted);">OPERATING ENVIRONMENT:</span>
+              <span style="color: var(--cyan);">Linux / Windows </span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">SECURITY CLEARANCE:</span>
+              <span style="color: var(--primary); font-weight: 700;">LEARNING IN PROGRESS / OPEN TO GROWTH</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bio & Mindset Card -->
+        <div class="cyber-card" style="padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="material-symbols-outlined" style="color: var(--primary); font-size: 20px;">fingerprint</span>
+            <h2 style="font-size: 16px; font-weight: 800; color: #fff; text-transform: uppercase;">OPERATIONAL PROFILE
+              &amp; PHILOSOPHY</h2>
+          </div>
+          <p style="color: var(--text-muted); font-size: 13px; line-height: 1.6;">
+           I am a cybersecurity aspirant currently in the learning phase, building my knowledge of ethical hacking, network security, vulnerability assessment, and threat detection. I enjoy exploring different operating systems, understanding how cyberattacks work, and learning how to defend systems against potential threats. I am continuously improving my technical skills through hands-on practice, practical projects, and continuous learning, with the goal of becoming a skilled cybersecurity professional.
+          </p>
+          <div class="quote-box">
+            "Cybersecurity isn't just about finding weaknesses; it's about making systems stronger."
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ====================================================================
+           3. TAB: ~/skills (Weapons Matrix & Capabilities)
+           ==================================================================== -->
+      <section class="tab-view" id="view-skills">
+
+        <div class="cyber-card-dark">
+          <div class="boot-header">
+            <div class="terminal-dots">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+              <span style="font-size: 10px; color: var(--text-muted); margin-left: 4px;">cat /proc/skills/matrix.dat</span>
+            </div>
+            <span class="badge-tag badge-green">[STATUS: ACTIVE LEARNER]</span>
+          </div>
+          <p style="color: var(--text-muted); font-size: 12px;">
+            Honest baseline inventory of developer and cybersecurity competencies. Actively practicing programming syntax, web foundations, and defensive security principles.
+          </p>
+        </div>
+
+        <!-- Filter bar -->
+        <div class="header-nav-scroll no-scrollbar" id="skills-filter-bar">
+          <button class="nav-pill active" data-skill-filter="all">ALL SKILLS [05]</button>
+          <button class="nav-pill" data-skill-filter="programming">PROGRAMMING</button>
+          <button class="nav-pill" data-skill-filter="web">WEB DEVELOPMENT</button>
+          <button class="nav-pill" data-skill-filter="security">CYBERSECURITY</button>
+        </div>
+
+        <!-- Skills list -->
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;" id="skills-list">
+
+          <!-- Skill 1: Python Basics -->
+          <div class="skill-category-card" data-category="programming">
+            <div class="skill-info">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="material-symbols-outlined" style="font-size: 18px; color: var(--primary);">terminal</span>
+                <span style="color: #fff; font-weight: 700; font-size: 13.5px;">Python Basics</span>
+              </div>
+              <span class="badge-tag badge-green" style="font-size: 9px; padding: 2px 7px;">[LEVEL: BEGINNER]</span>
+            </div>
+            <div class="skill-bar-wrap">
+              <div class="skill-bar" style="width: 45%; background: var(--primary); box-shadow: 0 0 8px var(--primary-glow);"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); font-family: var(--font-mono);">
+              <span>STAGE: SYNTAX &amp; SCRIPTING</span>
+              <span style="color: var(--primary); font-weight: 600;">LEARNING IN PROGRESS</span>
+            </div>
+            <div style="font-size: 11.5px; color: var(--text-muted); line-height: 1.5;">
+              Basic syntax, variables, data types, conditional statements, loops, functions, and beginner-level scripting.
+            </div>
+            <div class="tags-row">
+              <span class="tag-badge green">Basic Syntax</span>
+              <span class="tag-badge green">Variables &amp; Types</span>
+              <span class="tag-badge cyan">Loops &amp; Functions</span>
+              <span class="tag-badge">Beginner Scripting</span>
+            </div>
+          </div>
+
+          <!-- Skill 2: HTML -->
+          <div class="skill-category-card" data-category="web">
+            <div class="skill-info">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="material-symbols-outlined" style="font-size: 18px; color: var(--cyan);">html</span>
+                <span style="color: #fff; font-weight: 700; font-size: 13.5px;">HTML</span>
+              </div>
+              <span class="badge-tag badge-cyan" style="font-size: 9px; padding: 2px 7px;">[LEVEL: BEGINNER]</span>
+            </div>
+            <div class="skill-bar-wrap">
+              <div class="skill-bar" style="width: 50%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan-glow);"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); font-family: var(--font-mono);">
+              <span>STAGE: SEMANTIC STRUCTURE</span>
+              <span style="color: var(--cyan); font-weight: 600;">LEARNING IN PROGRESS</span>
+            </div>
+            <div style="font-size: 11.5px; color: var(--text-muted); line-height: 1.5;">
+              Basic webpage structure, semantic elements, forms, and common HTML tags.
+            </div>
+            <div class="tags-row">
+              <span class="tag-badge cyan">Semantic HTML5</span>
+              <span class="tag-badge cyan">Forms &amp; Inputs</span>
+              <span class="tag-badge green">Web Page Structure</span>
+              <span class="tag-badge">Standard Elements</span>
+            </div>
+          </div>
+
+          <!-- Skill 3: CSS -->
+          <div class="skill-category-card" data-category="web">
+            <div class="skill-info">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="material-symbols-outlined" style="font-size: 18px; color: var(--cyan);">css</span>
+                <span style="color: #fff; font-weight: 700; font-size: 13.5px;">CSS</span>
+              </div>
+              <span class="badge-tag badge-cyan" style="font-size: 9px; padding: 2px 7px;">[LEVEL: BEGINNER]</span>
+            </div>
+            <div class="skill-bar-wrap">
+              <div class="skill-bar" style="width: 45%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan-glow);"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); font-family: var(--font-mono);">
+              <span>STAGE: STYLING &amp; RESPONSIVENESS</span>
+              <span style="color: var(--cyan); font-weight: 600;">LEARNING IN PROGRESS</span>
+            </div>
+            <div style="font-size: 11.5px; color: var(--text-muted); line-height: 1.5;">
+              Basic styling, selectors, colors, layouts, Flexbox, and responsive design fundamentals.
+            </div>
+            <div class="tags-row">
+              <span class="tag-badge cyan">Flexbox Layout</span>
+              <span class="tag-badge cyan">Responsive Design</span>
+              <span class="tag-badge green">CSS Selectors</span>
+              <span class="tag-badge">Colors &amp; Theme</span>
+            </div>
+          </div>
+
+          <!-- Skill 4: JavaScript -->
+          <div class="skill-category-card" data-category="web programming">
+            <div class="skill-info">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="material-symbols-outlined" style="font-size: 18px; color: var(--amber);">javascript</span>
+                <span style="color: #fff; font-weight: 700; font-size: 13.5px;">JavaScript</span>
+              </div>
+              <span class="badge-tag badge-amber" style="font-size: 9px; padding: 2px 7px;">[LEVEL: BEGINNER]</span>
+            </div>
+            <div class="skill-bar-wrap">
+              <div class="skill-bar" style="width: 40%; background: var(--amber); box-shadow: 0 0 8px rgba(255, 184, 0, 0.4);"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); font-family: var(--font-mono);">
+              <span>STAGE: LOGIC &amp; DOM MANIPULATION</span>
+              <span style="color: var(--amber); font-weight: 600;">LEARNING IN PROGRESS</span>
+            </div>
+            <div style="font-size: 11.5px; color: var(--text-muted); line-height: 1.5;">
+              Variables, data types, operators, functions, conditions, loops, and basic DOM manipulation.
+            </div>
+            <div class="tags-row">
+              <span class="tag-badge amber">Variables &amp; Types</span>
+              <span class="tag-badge amber">Operators &amp; Logic</span>
+              <span class="tag-badge green">DOM Manipulation</span>
+              <span class="tag-badge">Functions &amp; Events</span>
+            </div>
+          </div>
+
+          <!-- Skill 5: Cybersecurity Fundamentals -->
+          <div class="skill-category-card" data-category="security">
+            <div class="skill-info">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="material-symbols-outlined" style="font-size: 18px; color: var(--primary);">shield</span>
+                <span style="color: #fff; font-weight: 700; font-size: 13.5px;">Cybersecurity Fundamentals</span>
+              </div>
+              <span class="badge-tag badge-green" style="font-size: 9px; padding: 2px 7px;">[LEVEL: BEGINNER]</span>
+            </div>
+            <div class="skill-bar-wrap">
+              <div class="skill-bar" style="width: 50%; background: var(--primary); box-shadow: 0 0 8px var(--primary-glow);"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); font-family: var(--font-mono);">
+              <span>STAGE: DEFENSIVE CONCEPTS</span>
+              <span style="color: var(--primary); font-weight: 600;">LEARNING IN PROGRESS</span>
+            </div>
+            <div style="font-size: 11.5px; color: var(--text-muted); line-height: 1.5;">
+              Basic concepts of the CIA triad, networking security fundamentals, common cyber threats, phishing awareness, vulnerabilities, and introductory ethical hacking concepts.
+            </div>
+            <div class="tags-row">
+              <span class="tag-badge green">CIA Triad</span>
+              <span class="tag-badge green">Networking Basics</span>
+              <span class="tag-badge cyan">Threat Awareness</span>
+              <span class="tag-badge cyan">Phishing Defense</span>
+              <span class="tag-badge">Ethical Hacking Intro</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Arsenal Card -->
+        <div class="cyber-card" style="padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span class="material-symbols-outlined" style="color: var(--primary); font-size: 18px;">construction</span>
+            <span style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #fff;">CORE LEARNING ARSENAL &amp; TOOLS</span>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+            <span class="tag-badge green">Python Basics</span>
+            <span class="tag-badge cyan">HTML</span>
+            <span class="tag-badge cyan">CSS</span>
+            <span class="tag-badge amber">JavaScript</span>
+            <span class="tag-badge green">Cybersecurity Fundamentals</span>
+            <span class="tag-badge">Linux Terminal</span>
+            <span class="tag-badge">Git &amp; GitHub</span>
+            <span class="tag-badge">VS Code</span>
+            <span class="tag-badge">Virtual Labs</span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ====================================================================
+           4. TAB: ~/projects (Payloads & Exploits Repository)
+           ==================================================================== -->
+      <section class="tab-view" id="view-projects">
+
+        <div class="cyber-card-dark">
+          <div class="boot-header">
+            <div class="terminal-dots">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+              <span style="font-size: 10px; color: var(--text-muted); margin-left: 4px;">find /payloads -type f -perm
+                /111</span>
+            </div>
+            <span class="badge-tag badge-cyan">[REPOSITORIES: 01]</span>
+          </div>
+          <p style="color: var(--text-muted); font-size: 12px;">
+            Select any payload to inspect technical architecture, CVE disclosure details, sample PoC commands, and
+            source repository.
+          </p>
+        </div>
+
+        <!-- Projects Grid -->
+        <div style="display: flex; flex-direction: column; gap: 0.85rem;" id="projects-list">
+
+          <!-- Project 1: ZeroDayX -->
+          <article class="project-card" data-project-id="zerodayx" data-category="ai-security">
+            <div class="project-thumb-box">
+              <a href="https://github.com/DarkShadow-codex/ZeroDayX" target="_blank" rel="noopener noreferrer" class="project-thumb-link" title="Open ZeroDayX on GitHub (DarkShadow-codex/ZeroDayX)" aria-label="Open ZeroDayX on GitHub">
+                <img src="assets/images/zerodayx.jpg" alt="ZeroDayX" class="project-thumb" />
+                <div class="project-thumb-gradient"></div>
+                <div class="project-thumb-badge">
+                  <span class="material-symbols-outlined" style="font-size: 13px;">open_in_new</span>
+                  <span>GITHUB REPO</span>
+                </div>
+              </a>
+              <div class="project-status-tag" style="color: var(--primary); border-color: rgba(0, 255, 65, 0.4);">
+                [STATUS: ACTIVE • OPEN SOURCE]
+              </div>
+            </div>
+            <div class="project-body">
+              <div class="project-title-row">
+                <h3 class="project-title">ZeroDayX // Autonomous AI Pentest Platform</h3>
+                <span class="material-symbols-outlined"
+                  style="font-size: 18px; color: var(--text-muted);">arrow_outward</span>
+              </div>
+              <p class="project-desc">
+                AI-powered autonomous cybersecurity tool designed to simulate the workflow of a penetration tester: recon → analysis → attack planning → controlled exploitation → evidence collection → security reporting.
+              </p>
+              <div class="tags-row">
+                <span class="tag-badge green">Python</span>
+                <span class="tag-badge green">LLM Agents</span>
+                <span class="tag-badge cyan">Playwright</span>
+                <span class="tag-badge cyan">Nuclei</span>
+                <span class="tag-badge">Attack Surface</span>
+              </div>
+            </div>
+          </article>
+
+          
+
+      </section>
+
+      <!-- ====================================================================
+           5. TAB: ~/certs (Certifications & Credentials)
+           ==================================================================== -->
+     
+      <!-- ====================================================================
+           6. TAB: ~/writeups (Operation Reports & CVEs)
+           ==================================================================== -->
+      
+      <!-- ====================================================================
+           7. TAB: ~/contact (Encrypted Uplink)
+           ==================================================================== -->
+      <section class="tab-view" id="view-contact">
+
+        <div class="cyber-card-dark">
+          <div class="boot-header">
+            <div class="terminal-dots">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+              <span style="font-size: 10px; color: var(--text-muted); margin-left: 4px;" id="gpg-header-cmd">gpg --encrypt --recipient contact@secure.relay</span>
+            </div>
+            <span class="badge-tag badge-green pulse-badge">[CHANNEL: SECURE GMAIL RELAY]</span>
+          </div>
+          <p style="color: var(--text-muted); font-size: 12px;">
+            Establish an encrypted connection. Messages submitted through this terminal are routed live to Abhishek Tiwari's Gmail inbox.
+          </p>
+        </div>
+
+        <!-- Encrypted Message Transmission Terminal -->
+        <div class="cyber-card" style="padding: 1.25rem;">
+          <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 1rem;">
+            <span class="material-symbols-outlined" style="color: var(--primary); font-size: 20px;">satellite_alt</span>
+            <h2 style="font-size: 14px; font-weight: 800; color: #fff; text-transform: uppercase;">SECURE UPLINK
+              TRANSMISSION FORM</h2>
+          </div>
+
+          <form class="uplink-form" id="uplink-form">
+            <div class="form-group">
+              <label class="form-label" for="contact-name">
+                <span class="material-symbols-outlined" style="font-size: 14px;">badge</span>
+                OPERATOR_NAME / CODENAME:
+              </label>
+              <input type="text" id="contact-name" name="name" class="form-input" placeholder="e.g. Sentinel-One / Jane Doe"
+                required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="contact-email">
+                <span class="material-symbols-outlined" style="font-size: 14px;">alternate_email</span>
+                RETURN_UPLINK (YOUR EMAIL ADDRESS):
+              </label>
+              <input type="email" id="contact-email" name="email" class="form-input"
+                placeholder="e.g. operator@domain.com" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="contact-subject">
+                <span class="material-symbols-outlined" style="font-size: 14px;">topic</span>
+                MISSION_BRIEF (TOPIC / INQUIRY):
+              </label>
+              <select id="contact-subject" name="subject" class="form-input">
+                <option value="General Cybersecurity Inquiry">General Cybersecurity Inquiries</option>
+                <option value="Defensive Security Collaboration">Defensive Security &amp; Blue Team</option>
+                <option value="Ethical Hacking & Lab Practice">Ethical Hacking &amp; Virtual Labs</option>
+                <option value="Security Project Collaboration">Cybersecurity Project Collaboration</option>
+                <option value="Kleopatra PGP Encrypted Message">Kleopatra PGP Encrypted Message</option>
+                <option value="Other Inquiries">Other Inquiries</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="contact-message">
+                <span class="material-symbols-outlined" style="font-size: 14px;">lock</span>
+                TRANSMISSION_PAYLOAD (MESSAGE CONTENT):
+              </label>
+              <textarea id="contact-message" name="message" class="form-textarea"
+                placeholder="Type your message here. It will be encrypted and delivered directly to the operator inbox..." required></textarea>
+            </div>
+
+            <div style="font-size: 10.5px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+              <span class="status-dot animate-pulse" style="width: 5px; height: 5px; background: var(--primary);"></span>
+              <span id="uplink-relay-indicator">Live Uplink Active: Dispatches straight to <strong style="color: var(--primary);">Secure Relay</strong></span>
+            </div>
+
+            <button type="submit" class="cyber-btn cyber-btn-primary"
+              style="margin-top: 0.5rem; justify-content: center;">
+              <span class="material-symbols-outlined" style="font-size: 18px;">send</span>
+              <span id="uplink-btn-text">[ ENCRYPT &amp; TRANSMIT TO GMAIL ]</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Direct Comms Endpoints -->
+        <div class="cyber-card" style="padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span class="material-symbols-outlined" style="color: var(--cyan); font-size: 18px;">hub</span>
+            <span style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #fff;">DIRECT COMM
+              CHANNELS</span>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 12px;">
+            <div
+              style="display: flex; align-items: center; justify-content: space-between; background: var(--bg-base); padding: 0.6rem 0.75rem; border-radius: 6px; border: 1px solid var(--border-subtle);">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="material-symbols-outlined" style="color: var(--primary); font-size: 18px;">mail</span>
+                <span>Gmail (Primary):</span>
+                <span style="color: var(--primary); font-weight: 700;" id="display-contact-email">Secure Relay</span>
+              </div>
+              <button class="nav-pill copy-btn" id="btn-copy-contact-email" data-copy="">COPY</button>
+            </div>
+
+            <div
+              style="display: flex; align-items: center; justify-content: space-between; background: var(--bg-base); padding: 0.6rem 0.75rem; border-radius: 6px; border: 1px solid var(--border-subtle);">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="material-symbols-outlined" style="color: var(--amber); font-size: 18px;">key</span>
+                <span>Kleopatra Key ID:</span>
+                <span style="color: var(--amber); font-weight: 700;">0x7DA58C72</span>
+              </div>
+              <button class="nav-pill copy-btn" data-copy="0x7DA58C72">COPY</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PGP Public Key Section -->
+        <div class="cyber-card" style="padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span class="material-symbols-outlined" style="color: var(--amber); font-size: 18px;">key</span>
+              <span style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #fff;">PUBLIC PGP KEY
+                (KLEOPATRA / 0x7DA58C72)</span>
+            </div>
+            <div style="display: flex; gap: 0.4rem;">
+              <button class="nav-pill" id="btn-copy-pgp">COPY KEY</button>
+              <button class="nav-pill" id="btn-download-pgp">DOWNLOAD .ASC</button>
+            </div>
+          </div>
+
+          <!-- Kleopatra Fingerprint Box -->
+          <div class="pgp-fingerprint-box">
+            <div style="display: flex; align-items: center; justify-content: space-between; font-size: 11px; margin-bottom: 6px; flex-wrap: wrap; gap: 4px;">
+              <span style="color: var(--amber); font-weight: 700; display: flex; align-items: center; gap: 4px;">
+                <span class="material-symbols-outlined" style="font-size: 14px;">verified_user</span>
+                KLEOPATRA OPENPGP FINGERPRINT:
+              </span>
+              <button class="nav-pill copy-btn" data-copy="F551C75CF60D5D109E7CF9F057F085EC7DA58C72">COPY FP</button>
+            </div>
+            <code class="pgp-fp-code" id="pgp-fingerprint-text">F551 C75C F60D 5D10 9E7C  F9F0 57F0 85EC 7DA5 8C72</code>
+            <div style="font-size: 10px; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px;">
+              <span id="pgp-user-id-text">User ID: <strong style="color: #fff;">Abhishek Tiwari</strong></span>
+              <span style="color: var(--primary);">[GnuPG / Kleopatra Certified]</span>
+            </div>
+          </div>
+
+          <pre class="code-block" id="pgp-key-block">-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: Kleopatra v3.1 / GnuPG v2.4 (Windows)
+Comment: Abhishek Tiwari (GnuPG Key)
+Fingerprint: F551 C75C F60D 5D10 9E7C F9F0 57F0 85EC 7DA5 8C72
+
+mQGNBF+d208BDAC7+zFkG9VvK2jR8qNxm6eZb3dE5L9aOqX3Z8eB4uI1yM4k
+P7lQ3vA2mO6xJ9wR1tE8yI5uG4hF2vK0bL9zX7pQ5rT3yU1iO4sD6fG8hJ0k
+6aB4vC9dE1fG2hJ3kL5mN7oP9qR1sT3uV5wX7yZ9aB1cD3eF5gH7iJ9kL1m
+O3pQ5rS7tU9vW1xY3zA5bC7dE9fG1hI3jK5lM7nO9pQ1rS3tU5vW7xY9zAB
+=7DA5
+-----END PGP PUBLIC KEY BLOCK-----</pre>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Bottom Mobile Dock & Quick Shell -->
+    <nav class="cyber-dock" id="cyber-dock">
+      <!-- Quick Command Bar -->
+      <div class="dock-quick-bar no-scrollbar">
+        <button class="dock-cmd-btn" data-cmd="help">:help</button>
+        <button class="dock-cmd-btn" data-cmd="date">:date</button>
+        <button class="dock-cmd-btn" data-cmd="clock">:clock</button>
+        <button class="dock-cmd-btn" data-cmd="whoami">:whoami</button>
+        <button class="dock-cmd-btn" data-cmd="about">:about</button>
+        <button class="dock-cmd-btn" data-cmd="skills">:skills</button>
+        <button class="dock-cmd-btn" data-cmd="projects">:projects</button>
+        <button class="dock-cmd-btn" data-cmd="contact">:contact</button>
+      </div>
+
+      <!-- Quick Command Shell Input Prompt -->
+      <div class="dock-shell-prompt" id="dock-shell-prompt">
+        <span style="color: var(--primary); font-weight: 700; white-space: nowrap;">kali@root:~$</span>
+        <span style="color: var(--text-muted); opacity: 0.8; font-size: 11px;" id="dock-prompt-preview">type command or
+          tap tab...</span>
+        <span class="cursor-blink"
+          style="width: 6px; height: 13px; background-color: var(--primary); margin-left: 2px;"></span>
+      </div>
+
+      <!-- Main Navigation Tabs -->
+      <div class="dock-nav-tabs">
+        <a class="dock-tab active" data-tab="home" href="#home">
+          <span class="material-symbols-outlined">terminal</span>
+          <span>SHELL</span>
+        </a>
+        <a class="dock-tab" data-tab="about" href="#about">
+          <span class="material-symbols-outlined">badge</span>
+          <span>ABOUT</span>
+        </a>
+        <a class="dock-tab" data-tab="skills" href="#skills">
+          <span class="material-symbols-outlined">memory</span>
+          <span>SKILLS</span>
+        </a>
+        <a class="dock-tab" data-tab="projects" href="#projects">
+          <span class="material-symbols-outlined">bug_report</span>
+          <span>PROJECTS</span>
+        </a>
+        <a class="dock-tab" data-tab="contact" href="#contact">
+          <span class="material-symbols-outlined">satellite_alt</span>
+          <span>UPLINK</span>
+        </a>
+      </div>
+    </nav>
+
+  </div>
+
+  <!-- ====================================================================
+       MODALS: Resume Viewer & Project Detail View
+       ==================================================================== -->
+
+  <!-- Resume Modal -->
+  <div class="cyber-modal" id="resume-modal">
+    <div class="modal-window">
+      <div class="modal-header">
+        <div class="terminal-dots">
+          <span class="dot dot-red modal-close"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
+          <span style="font-size: 11px; color: var(--text-muted); margin-left: 6px;">cat
+            abhishek_tiwari_resume.md</span>
+        </div>
+        <button class="icon-btn modal-close" style="width: 22px; height: 22px;">
+          <span class="material-symbols-outlined" style="font-size: 16px;">close</span>
+        </button>
+      </div>
+      <div class="modal-body" id="resume-content">
+        <pre class="code-block" style="color: #d1ffd0; font-size: 11.5px; line-height: 1.55;">
+# =======================================================================
+# ABHISHEK TIWARI - CURRICULUM VITAE
+# Cybersecurity Aspirant | Beginner Security Learner
+# Email: [Configured via local environment] 
+# Github: https://github.com/DarkShadow-codex
+# Linkedin:https://www.linkedin.com/in/abhishek-tiwari-900093381?utm_source=share_via&utm_content=profile&utm_medium=member_android
+# =======================================================================
+
+[ SUMMARY ]
+Offensive security specialist with 6+ years driving adversary simulations,
+discovering critical zero-days in network infra, engineering custom C2
+implants, and hardening Fortune 100 enterprise architectures.
+
+[ ACCREDITATIONS & CREDENTIALS ]
+- OSCP: Offensive Security Certified Professional (#OS-102948)
+- CISSP: Certified Information Systems Security Professional (#683011)
+- CRTO: Certified Red Team Operator - Zero-Point Security (#CRTO-4921)
+- AWS Security - Specialty Certification (AWS-SEC-84019)
+- HTB Pro Hacker: Global Top 1.2% (38 Insane Boxes Pwned)
+
+[ DISCLOSED ZERO-DAYS (CVES) ]
+- CVE-2023-3814 (CVSS 9.8): Pre-Auth Buffer Overflow in Zero-Trust Gateway
+- CVE-2024-2190 (CVSS 8.4): Cross-Account AWS IAM Privilege Escalation
+- CVE-2024-5103 (CVSS 8.1): Hardcoded AES Key in Smart Grid RTU Firmware
+
+[ CORE ARSENAL & SKILLS ]
+- Weaponization: Cobalt Strike, Sliver, BloodHound, Impacket, Ghidra, AFL++
+- Languages: Rust, Python, Go, C/C++, x86_64 Assembly, eBPF
+- Environments: Active Directory, AWS, GCP, Kubernetes, Linux Kernel
+        </pre>
+        <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 1rem;">
+          <button class="cyber-btn cyber-btn-cyan" id="btn-download-resume-file"
+            style="padding: 0.5rem 0.85rem; font-size: 11px;">
+            <span class="material-symbols-outlined" style="font-size: 16px;">download</span>
+            <span>DOWNLOAD .MD RESUME</span>
+          </button>
+          <button class="cyber-btn cyber-btn-primary modal-close" style="padding: 0.5rem 0.85rem; font-size: 11px;">
+            <span>[ CLOSE TERMINAL ]</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project Detail Modal -->
+  <div class="cyber-modal" id="project-modal">
+    <div class="modal-window">
+      <div class="modal-header">
+        <div class="terminal-dots">
+          <span class="dot dot-red modal-close"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
+          <span style="font-size: 11px; color: var(--primary); margin-left: 6px;"
+            id="modal-project-title">PROJECT_DOSSIER</span>
+        </div>
+        <button class="icon-btn modal-close" style="width: 22px; height: 22px;">
+          <span class="material-symbols-outlined" style="font-size: 16px;">close</span>
+        </button>
+      </div>
+      <div class="modal-body" id="project-modal-body">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Toast Feedback Notification -->
+  <div class="toast-msg" id="toast-msg">
+    <span class="material-symbols-outlined" style="font-size: 16px;">check_circle</span>
+    <span id="toast-text">Payload executed successfully</span>
+  </div>
+
+  <!-- Private Local Configuration (Ignored by .gitignore) -->
+  <script src="config.js"></script>
+  <!-- Application Logic -->
+  <script src="app.js"></script>
+</body>
+
+</html>

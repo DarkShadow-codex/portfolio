@@ -1,0 +1,126 @@
+# ==============================================================================
+# .gitignore - Cybersecurity Portfolio
+# Excludes credentials, private keys, environment variables, and sensitive files
+# Only accessible locally by the repository owner
+# ==============================================================================
+
+# --- CREDENTIALS, SECRETS & ENVIRONMENT VARIABLES ---
+.env
+.env.*
+*.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.json
+*.env.json
+
+# Local Configuration & Credential Scripts
+config.js
+config.local.js
+credentials.js
+env.js
+secrets.js
+keys.js
+auth.js
+
+# Allow template files to be tracked on GitHub
+!.env.example
+!.env.template
+!config.example.js
+
+# Structured Secrets & API Keys
+config.json
+secrets.json
+secrets/
+secrets.*
+credentials/
+credentials.*
+*.credentials
+client_secret*.json
+token.json
+tokens.json
+auth.json
+*.jwt
+serviceAccountKey*.json
+firebase-adminsdk*.json
+api_key*.json
+apikey*.json
+formsubmit.json
+webhook*.json
+
+# --- PRIVATE KEYS, CERTIFICATES & ENCRYPTION KEYRINGS ---
+# Kleopatra / GnuPG private key exports, SSH & SSL keys
+*.key
+*.pem
+*.pfx
+*.p12
+*.pkcs12
+*.crt
+*.cer
+*.der
+id_rsa
+id_rsa*
+id_ed25519
+id_ed25519*
+id_ecdsa
+id_ecdsa*
+id_dsa
+id_dsa*
+secring.*
+*.secret.asc
+*private*key*.asc
+private*.asc
+*.private.asc
+*.gpg
+*.pgp
+*.kdbx
+*.keepass
+
+# --- LOCAL IDE & EDITOR CONFIGURATION ---
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+.history/
+
+# --- OPERATING SYSTEM GENERATED FILES ---
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Linux
+.fuse_hidden*
+.directory
+
+# --- RUNTIME, LOGS & TEMPORARY FILES ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.tmp
+*.temp
+*.bak
+*.cache/
+.cache/
+
+# --- NODE & PACKAGE MANAGEMENT (IF USED) ---
+node_modules/
+dist/
+build/
+.parcel-cache/
