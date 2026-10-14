@@ -191,6 +191,53 @@
   let historyIndex = -1;
   let activeHudClockInterval = null;
 
+  // --- REAL-TIME CONTINUOUS SYSTEM UPTIME CHRONOMETER ENGINE ---
+  // Starts from 00-00-00-00 and permanently persists across tab closures, browser exits, and portfolio reloads.
+  const STORAGE_KEY_SYS_START = 'portfolio_sys_start_epoch';
+  const STORAGE_KEY_CLOCK_MODE = 'terminal_clock_mode';
+
+  function getSystemStartEpoch() {
+    let saved = null;
+    try {
+      saved = localStorage.getItem(STORAGE_KEY_SYS_START);
+    } catch (e) {
+      // In case localStorage is blocked/sandboxed
+    }
+
+    if (saved) {
+      const parsed = parseInt(saved, 10);
+      if (!isNaN(parsed) && parsed > 0 && parsed <= Date.now()) {
+        return parsed;
+      }
+    }
+
+    // First initialization: Start NOW from 00-00-00-00
+    const now = Date.now();
+    try {
+      localStorage.setItem(STORAGE_KEY_SYS_START, String(now));
+    } catch (e) {}
+    return now;
+  }
+
+  let sysStartTime = getSystemStartEpoch();
+
+  function getSystemUptimeData() {
+    const elapsedTotalSec = Math.max(0, Math.floor((Date.now() - sysStartTime) / 1000));
+    const days = String(Math.floor(elapsedTotalSec / 86400)).padStart(2, '0');
+    const hrs = String(Math.floor((elapsedTotalSec % 86400) / 3600)).padStart(2, '0');
+    const mins = String(Math.floor((elapsedTotalSec % 3600) / 60)).padStart(2, '0');
+    const secs = String(elapsedTotalSec % 60).padStart(2, '0');
+    return {
+      totalSec: elapsedTotalSec,
+      days,
+      hrs,
+      mins,
+      secs,
+      dash: `${days}-${hrs}-${mins}-${secs}`,
+      units: `${days}d ${hrs}h ${mins}m ${secs}s`
+    };
+  }
+
   // Real-time IP Geolocation & Network Telemetry State
   const clientGeo = {
     ip: 'Detecting...',
@@ -324,20 +371,22 @@
       ? `${clientGeo.lat.toFixed(4)}° N, ${clientGeo.lon.toFixed(4)}° E`
       : 'Resolving coordinates...';
     const netStr = [clientGeo.isp, clientGeo.asn].filter(Boolean).join(' ') || 'Direct Network Adapter';
+    const upt = getSystemUptimeData();
 
     return `[+] NODE CHRONOMETER & GEOLOCATION TELEMETRY
 ─────────────────────────────────────────────────────────────────
-[*] CURRENT SYSTEM TIME : ${time12}  (${time24} HRS)
-[*] CURRENT SYSTEM DATE : ${dateFormatted}
-[*] LOCAL NODE TIMEZONE : ${timeZone} (${offsetStr})
-[*] PUBLIC IP ADDRESS   : ${clientGeo.ip}
-[*] GEOLOCATION LOCUS   : ${locationStr}
-[*] GEO COORDINATES     : ${coordsStr}
-[*] NETWORK / ISP       : ${netStr}
-[*] UTC REFERENCE       : ${utcFormatted}
-[*] STATUS              : [ONLINE • LOCAL SYSTEM RTC & IP SYNCED]
+[*] CURRENT SYSTEM TIME  : ${time12}  (${time24} HRS)
+[*] CONTINUOUS SYS TIME  : [SYS TIME: ${upt.dash}]  (${upt.units})
+[*] CURRENT SYSTEM DATE  : ${dateFormatted}
+[*] LOCAL NODE TIMEZONE  : ${timeZone} (${offsetStr})
+[*] PUBLIC IP ADDRESS    : ${clientGeo.ip}
+[*] GEOLOCATION LOCUS    : ${locationStr}
+[*] GEO COORDINATES      : ${coordsStr}
+[*] NETWORK / ISP        : ${netStr}
+[*] UTC REFERENCE        : ${utcFormatted}
+[*] STATUS               : [ONLINE • PERMANENT CONTINUOUS CHRONOMETER ACTIVE]
 ─────────────────────────────────────────────────────────────────
-[Tip: Run 'clock' for live HUD chronometer | 'locate' for full network info]`;
+[Tip: Run 'uptime' for defense telemetry | 'clock' for live HUD ticker]`;
   }
 
   function getNetworkAuditReport() {
@@ -632,8 +681,41 @@ drwxr-xr-x  4 abhishek  staff  4096 Oct 11 00:00  disclosures/`,
       return;
     }
 
+    // CONTINUOUS DEFENSE UPTIME TELEMETRY
+    if (cmd === 'uptime' || cmd === 'uptime -p' || cmd === 'uptime --pretty') {
+      playClick();
+      const upt = getSystemUptimeData();
+      const startDateObj = new Date(sysStartTime);
+      const startStr = startDateObj.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) + ' ' + startDateObj.toLocaleTimeString([], { hour12: true, hour: 'numeric', minute: '2-digit' });
+      appendCliOutput(rawCmd, `[+] DEFENSE NODE CONTINUOUS TELEMETRY UPTIME
+─────────────────────────────────────────────────────────────────
+[*] CHRONOMETER     : [SYS TIME: ${upt.dash}]
+[*] ACTIVE DURATION : ${upt.days} days, ${upt.hrs} hours, ${upt.mins} mins, ${upt.secs} secs
+[*] TIME INCEPTION  : ${startStr} (Started 00-00-00-00)
+[*] PERSISTENCE     : PERMANENT (Preserved across tab & portfolio closures)
+[*] PACKET INTEGRITY: 100% VERIFIED • 0.00% LOSS
+─────────────────────────────────────────────────────────────────`);
+      playSuccess();
+      return;
+    }
+
+    // RE-ANCHOR / RESET SYS TIME CLI UTILITY
+    if (cmd === 'uptime --reset' || cmd === 'systime --reset' || cmd === 'sys --reset') {
+      playClick();
+      const newNow = Date.now();
+      sysStartTime = newNow;
+      try {
+        localStorage.setItem(STORAGE_KEY_SYS_START, String(newNow));
+      } catch (e) {}
+      updateSystemClock();
+      appendCliOutput(rawCmd, `[✓] System chronometer reset to 00-00-00-00. Permanent continuous tracking re-anchored from now.`);
+      playSuccess();
+      showToast('Sys time restarted from 00-00-00-00');
+      return;
+    }
+
     // LIVE DATE & TIME TELEMETRY WITH IP GEOLOCATION & LOCAL SYSTEM TIME
-    if (cmd === 'date' || cmd === 'time' || cmd === 'systime' || cmd === 'sys' || cmd === 'uptime') {
+    if (cmd === 'date' || cmd === 'time' || cmd === 'systime' || cmd === 'sys') {
       playClick();
       const entry = appendCliOutput(rawCmd, getSystemTimeReport());
       if (!clientGeo.loaded) {
@@ -680,12 +762,6 @@ drwxr-xr-x  4 abhishek  staff  4096 Oct 11 00:00  disclosures/`,
       playClick();
       const histLines = commandHistory.map((c, i) => `  ${String(i + 1).padStart(3, ' ')}  ${c}`).join('\n') || '  (No previous commands recorded)';
       appendCliOutput(rawCmd, `COMMAND EXECUTION HISTORY:\n${histLines}`);
-      return;
-    }
-
-    if (cmd === 'uptime') {
-      appendCliOutput(cmd, 'Node defense uptime: 142 days, 8 hours, 19 mins, 42 secs (Packet loss: 0.00%)');
-      playClick();
       return;
     }
 
@@ -1548,57 +1624,56 @@ O3pQ5rS7tU9vW1xY3zA5bC7dE9fG1hI3jK5lM7nO9pQ1rS3tU5vW7xY9zAB
     }, 2800);
   }
 
-  // --- REAL-TIME SYSTEM UPTIME CHRONOMETER (STARTS FROM 00-00-00-00) ---
+  // --- REAL-TIME SYSTEM UPTIME CHRONOMETER (STARTS FROM 00-00-00-00 & PERMANENTLY CONTINUOUS) ---
   const uptimeClock = document.getElementById('uptime-clock');
   const statusIndicatorBox = document.getElementById('status-indicator-box') || (uptimeClock ? uptimeClock.closest('.status-indicator') : null);
 
   // Time format modes:
-  // 0: [SYS:ONLINE 00d 00h 00m 00s] (Standard unit format starting from 00-00-00-00)
-  // 1: [SYS:ONLINE 00-00-00-00] (Exact dash format starting from 00-00-00-00)
-  // 2: [SYS:ONLINE 00:00:00:00] (Digital colon format)
-  // 3: [SYS TIME: 11:41:21 AM] (Live local clock)
-  let clockFormatMode = parseInt(localStorage.getItem('terminal_clock_mode') || '0', 10);
-  if (isNaN(clockFormatMode) || clockFormatMode < 0 || clockFormatMode > 3) {
+  // 0: [SYS TIME: 00-00-00-00] (Continuous Sys Time Dash format starting from 00-00-00-00)
+  // 1: [SYS:ONLINE 00-00-00-00] (Sys Online Dash format)
+  // 2: [SYS:ONLINE 00d 00h 00m 00s] (Standard unit format)
+  // 3: [SYS:ONLINE 00:00:00:00] (Digital colon format)
+  // 4: [SYS TIME: 11:41:21 AM] (Live local 12-hour device clock)
+  let clockFormatMode = parseInt(localStorage.getItem(STORAGE_KEY_CLOCK_MODE) || '0', 10);
+  if (isNaN(clockFormatMode) || clockFormatMode < 0 || clockFormatMode > 4) {
     clockFormatMode = 0;
   }
-
-  // Session start epoch initialized right now at 0
-  const sessionStartTime = Date.now();
 
   function updateSystemClock() {
     if (!uptimeClock) return;
 
-    const elapsedTotalSec = Math.floor((Date.now() - sessionStartTime) / 1000);
-    const days = String(Math.floor(elapsedTotalSec / 86400)).padStart(2, '0');
-    const hrs = String(Math.floor((elapsedTotalSec % 86400) / 3600)).padStart(2, '0');
-    const mins = String(Math.floor((elapsedTotalSec % 3600) / 60)).padStart(2, '0');
-    const secs = String(elapsedTotalSec % 60).padStart(2, '0');
-
+    const upt = getSystemUptimeData();
     let displayText = '';
+
     switch (clockFormatMode) {
       case 0:
-        displayText = `[SYS:ONLINE ${days}d ${hrs}h ${mins}m ${secs}s]`;
+        displayText = `[SYS TIME: ${upt.dash}]`;
         break;
       case 1:
-        displayText = `[SYS:ONLINE ${days}-${hrs}-${mins}-${secs}]`;
+        displayText = `[SYS:ONLINE ${upt.dash}]`;
         break;
       case 2:
-        displayText = `[SYS:ONLINE ${days}:${hrs}:${mins}:${secs}]`;
+        displayText = `[SYS:ONLINE ${upt.units}]`;
         break;
-      case 3: {
+      case 3:
+        displayText = `[SYS:ONLINE ${upt.days}:${upt.hrs}:${upt.mins}:${upt.secs}]`;
+        break;
+      case 4: {
         const now = new Date();
         const time12 = now.toLocaleTimeString([], { hour12: true, hour: 'numeric', minute: '2-digit', second: '2-digit' });
         displayText = `[SYS TIME: ${time12}]`;
         break;
       }
       default:
-        displayText = `[SYS:ONLINE ${days}d ${hrs}h ${mins}m ${secs}s]`;
+        displayText = `[SYS TIME: ${upt.dash}]`;
     }
 
     uptimeClock.textContent = displayText;
 
     if (statusIndicatorBox) {
-      statusIndicatorBox.title = `System Online Chronometer: ${days}d ${hrs}h ${mins}m ${secs}s active (Started from 00-00-00-00)\nClick to toggle format.`;
+      const startDateObj = new Date(sysStartTime);
+      const startStr = startDateObj.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) + ' ' + startDateObj.toLocaleTimeString([], { hour12: true, hour: 'numeric', minute: '2-digit' });
+      statusIndicatorBox.title = `Continuous System Chronometer • Started at 00-00-00-00 (${startStr})\nActive: ${upt.units} [${upt.dash}]\nPermanent: Does not reset after closing tab or portfolio\nClick to switch format mode.`;
     }
   }
 
@@ -1606,19 +1681,40 @@ O3pQ5rS7tU9vW1xY3zA5bC7dE9fG1hI3jK5lM7nO9pQ1rS3tU5vW7xY9zAB
   updateSystemClock();
   setInterval(updateSystemClock, 1000);
 
+  // Synchronize across multiple open tabs/windows in real time
+  window.addEventListener('storage', (e) => {
+    if (e.key === STORAGE_KEY_SYS_START && e.newValue) {
+      const parsed = parseInt(e.newValue, 10);
+      if (!isNaN(parsed) && parsed > 0) {
+        sysStartTime = parsed;
+        updateSystemClock();
+      }
+    }
+    if (e.key === STORAGE_KEY_CLOCK_MODE && e.newValue) {
+      const parsedMode = parseInt(e.newValue, 10);
+      if (!isNaN(parsedMode) && parsedMode >= 0 && parsedMode < 5) {
+        clockFormatMode = parsedMode;
+        updateSystemClock();
+      }
+    }
+  });
+
   if (statusIndicatorBox) {
     statusIndicatorBox.addEventListener('click', () => {
       initAudio();
       playClick();
-      clockFormatMode = (clockFormatMode + 1) % 4;
-      localStorage.setItem('terminal_clock_mode', String(clockFormatMode));
+      clockFormatMode = (clockFormatMode + 1) % 5;
+      try {
+        localStorage.setItem(STORAGE_KEY_CLOCK_MODE, String(clockFormatMode));
+      } catch (e) {}
       updateSystemClock();
 
       const modeNames = [
-        'Uptime (00d 00h 00m 00s)',
-        'Uptime (00-00-00-00)',
-        'Digital (00:00:00:00)',
-        'Local Clock (12-Hour)'
+        'Continuous Sys Time (00-00-00-00)',
+        'Sys Online Dash (00-00-00-00)',
+        'Sys Duration Units (00d 00h 00m 00s)',
+        'Digital Chronometer (00:00:00:00)',
+        'Live Device Clock (12-Hour)'
       ];
       showToast(`System chronometer format: ${modeNames[clockFormatMode]}`);
     });
